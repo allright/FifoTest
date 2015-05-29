@@ -2,18 +2,20 @@
 #include <thread>
 #include <assert.h>
 #include "Fifo.h"
+#include "MemBlock.h"
 
 using namespace std;
 
 volatile static bool stop = false;
-static Fifo<int> fifo(64);
+static Fifo<MemBlock*> fifo(64);
 
 void writer(){
     std::cout << "writer started... \n";
 
     int count = 0;
     while (!stop){
-        bool ok = fifo.write(count);
+        MemBlock* val = new MemBlock(count);
+        bool ok = fifo.write(val);
         if (ok){
             count++;
         }
@@ -29,11 +31,12 @@ void reader(){
     std::cout << "reader started... \n";
 
     int count = 0;
-    int val;
+    MemBlock* val;
     while (!stop){
         bool read = fifo.read(&val);
         if (read){
-            assert(val == count);
+            assert(val->check(count));
+            delete val;
             count++;
         }
     }

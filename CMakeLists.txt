@@ -4,4 +4,4 @@ project(FifoTest)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES main.cpp)
-add_executable(FifoTest ${SOURCE_FILES} Fifo.h)
+add_executable(FifoTest ${SOURCE_FILES} Fifo.h MemBlock.h)
