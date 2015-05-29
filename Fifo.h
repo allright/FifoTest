@@ -6,10 +6,13 @@
 #define FIFOTEST_FIFO_H
 
 #include <assert.h>
+#include <atomic>
+#include <mutex>
 
 template <class T>
 class Fifo {
 public:
+    std::mutex mMutex;
     Fifo(int size): mWr(0), mRd (0),mMask(size -1)
     {
         assert((mMask & size) == 0); // check size = 2^n
@@ -21,6 +24,8 @@ public:
     }
 
     bool write(T val) {
+ //       std::lock_guard<std::mutex> lock(mMutex);
+
         unsigned int wr = (mWr + 1) & mMask;
         if (wr == mRd){
             return false;
@@ -31,11 +36,14 @@ public:
     }
 
     bool read(T* val) {
+ //       std::lock_guard<std::mutex> lock(mMutex);
+
         if (mWr == mRd){
             return false;
         }
         *val = mBuf[mRd];
         mRd = (mRd + 1) & mMask;
+
         return true;
     }
 
