@@ -6,7 +6,7 @@
 using namespace std;
 
 volatile static bool stop = false;
-static Fifo fifo(64);
+static Fifo<int> fifo(64);
 
 void writer(){
     std::cout << "writer started... \n";
